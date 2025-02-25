@@ -3,7 +3,7 @@
 import sys
 
 
-# Student ID: 0000000
+# Student ID: 3367315
 
 
 # Read included years.
@@ -28,4 +28,3 @@ for line in sys.stdin:
     # Output the title and a count of 1.
     # Note: This IS NOT the CORRECT approach but should give you a useful starting point.
     print('%s\t%s' % (title, 1))
-    
