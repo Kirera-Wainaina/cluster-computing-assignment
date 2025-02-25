@@ -30,24 +30,18 @@ print('min_votes = %s' % min_votes, file=sys.stderr)
 #   ...these are just suggestions/hints.
 
 
-accumulator = 0
-accumulator_key = None
+rating_count = 0
+genre = None
+movie = None
 
 # Process the input line by line.
 for line in sys.stdin:
 
-    # Parse the input line.
-    key, value = line.split('\t')
-    value_number = Decimal(value)
+    title, genre, year, rating = line.strip().split('\t')
 
-    if key == accumulator_key:
-        accumulator += value_number
-    else:
-        if accumulator_key:
-            print("%s\t%s" % (accumulator_key, accumulator))
-        accumulator_key = key
-        accumulator = value_number
+    """
+    Movies have one year but they can have multiple genres.
+    We accumulate the ratings of each movie for each genre
+    """
 
-# Output for the last key.
-if accumulator_key:
-    print("%s\t%s" % (accumulator_key, accumulator))
+    print(line.strip())
