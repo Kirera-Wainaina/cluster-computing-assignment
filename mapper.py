@@ -40,4 +40,8 @@ for line in sys.stdin:
 
     # Output lines with single genres
     for genre in genres:
-        print('%s\t%s\t%s\t%s\t%s' % (uid, title, genre, year, rating))
+        # skip if genre is not included
+        if genre not in included_genres:
+            continue
+        else:
+            print('%s\t%s\t%s\t%s\t%s' % (uid, title, genre, year, rating))
