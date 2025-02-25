@@ -33,6 +33,11 @@ for line in sys.stdin:
     # Split genres into a list
     genres = genres.split('|')
 
+    # check if year is included
+    # skip if year is not included
+    if year not in included_years:
+        continue
+
     # Output lines with single genres
     for genre in genres:
         print('%s\t%s\t%s\t%s\t%s' % (uid, title, genre, year, rating))
