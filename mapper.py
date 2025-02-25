@@ -30,6 +30,9 @@ for line in sys.stdin:
     # Parse the input line.
     uid, title, genres, year, rating = line.strip().split('\t')
 
-    # Output the title and a count of 1.
-    # Note: This IS NOT the CORRECT approach but should give you a useful starting point.
-    print('%s\t%s' % (title, 1))
+    # Split genres into a list
+    genres = genres.split('|')
+
+    # Output lines with single genres
+    for genre in genres:
+        print('%s\t%s\t%s\t%s\t%s' % (uid, title, genre, year, rating))
