@@ -31,8 +31,9 @@ print('min_votes = %s' % min_votes, file=sys.stderr)
 
 
 rating_count = 0
-genre = None
-movie = None
+rating_sum = 0
+current_genre = None
+current_title = None
 
 # Process the input line by line.
 for line in sys.stdin:
@@ -41,7 +42,23 @@ for line in sys.stdin:
 
     """
     Movies have one year but they can have multiple genres.
-    We accumulate the ratings of each movie for each genre
+    We accumulate the ratings of each title for each genre
     """
 
-    print(line.strip())
+    # save the values if the genre or title is different
+    if genre != current_genre or title != current_title:
+
+        # output the last values before updating
+        if current_genre and current_title:
+            print('%s\t%s\t%s\t%d\t%d' %
+                  (title, genre, year, rating_count, rating_sum))
+
+        current_genre = genre
+        current_title = title
+        rating_count = 1
+        rating_sum = Decimal(rating)
+
+    # increment the count and sum if the genre and title are the same
+    elif genre == current_genre and title == current_title:
+        rating_count += 1
+        rating_sum += Decimal(rating)
