@@ -6,6 +6,11 @@ import sys
 # Student ID: 3367315
 
 
+"""
+The problem is to analyse a list of movie review ratings to find the film title(s) with the highest average rating for
+each genre, for a specified set of years and genres.
+"""
+
 # Read included years.
 with open('years.txt', 'r') as f:
     included_years = f.read().split()
