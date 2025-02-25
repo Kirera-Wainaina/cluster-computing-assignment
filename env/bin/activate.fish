@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/kirera/Documents/projects/data-manipulation-class/cluster-computing/env"
+set -gx VIRTUAL_ENV "/home/kirera/Documents/projects/cluster-computing/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

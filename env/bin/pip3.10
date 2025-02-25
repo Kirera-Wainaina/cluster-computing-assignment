@@ -1,4 +1,4 @@
-#!/home/kirera/Documents/projects/data-manipulation-class/cluster-computing/env/bin/python3
+#!/home/kirera/Documents/projects/cluster-computing/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
