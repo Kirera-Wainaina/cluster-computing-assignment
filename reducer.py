@@ -38,27 +38,26 @@ current_title = None
 # Process the input line by line.
 for line in sys.stdin:
 
-    title, genre, year, rating = line.strip().split('\t')
+    title, genre, rating = line.strip().split('\t')
 
     """
     Movies have one year but they can have multiple genres.
     We accumulate the ratings of each title for each genre
     """
 
-    # save the values if the genre or title is different
-    if genre != current_genre or title != current_title:
+    # check if the title and genre are already saved
+    # if they are not, save the new ones
+    # if they are, increment the count and rating
 
-        # output the last values before updating
-        if current_genre and current_title:
-            print('%s\t%s\t%s\t%d\t%d' %
-                  (title, genre, year, rating_count, rating_sum))
-
-        current_genre = genre
-        current_title = title
+    if current_title != title or current_genre != genre:
+        print(current_title, current_genre, rating_sum, rating_count)
+        if rating_count >= min_votes:
+            # print(current_title, current_genre, rating_sum / rating_count)
+            pass
         rating_count = 1
         rating_sum = Decimal(rating)
-
-    # increment the count and sum if the genre and title are the same
-    elif genre == current_genre and title == current_title:
+        current_title = title
+        current_genre = genre
+    else:
         rating_count += 1
         rating_sum += Decimal(rating)
