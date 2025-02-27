@@ -52,5 +52,5 @@ for line in sys.stdin:
         if genre not in included_genres:
             continue
         else:
-            print('%s\t%s\t%s\t%s' %
-                  (title, genre, year, rating))
+            print('%s\t%s\t%s' %
+                  (title, genre, rating))
