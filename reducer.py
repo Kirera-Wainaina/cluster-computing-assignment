@@ -50,10 +50,9 @@ for line in sys.stdin:
     # if they are, increment the count and rating
 
     if current_title != title or current_genre != genre:
-        print(current_title, current_genre, rating_sum, rating_count)
-        if rating_count >= min_votes:
-            # print(current_title, current_genre, rating_sum / rating_count)
-            pass
+        if rating_count >= min_votes:  # work with titles that have enough votes
+            print(current_title, current_genre, rating_sum, rating_count)
+
         rating_count = 1
         rating_sum = Decimal(rating)
         current_title = title
