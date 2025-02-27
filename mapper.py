@@ -9,6 +9,14 @@ import sys
 """
 The problem is to analyse a list of movie review ratings to find the film title(s) with the highest average rating for
 each genre, for a specified set of years and genres.
+
+This mapper does the following:
+    1. Reads the included years and genres from files.
+    2. Processes and parses the input line by line.
+    3. Splits genres into a list resulting in multiple lines.
+    4. Checks if the resultant row has year and genre included in the list given.
+    5. Skips rows with year and genre not included.
+    6. Outputs lines with single genres.
 """
 
 # Read included years.
