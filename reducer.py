@@ -12,7 +12,7 @@ from decimal import Decimal
 # You will want to set it to 15 when running against the large ratings.txt data file.
 # You will want to set it to 1 or 2 when running against the smaller r5.txt and r100.txt files
 # otherwise films with small numbers of votes will be prevented from producing results.
-min_votes = 1
+min_votes = 15
 print('min_votes = %s' % min_votes, file=sys.stderr)
 
 
