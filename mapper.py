@@ -19,38 +19,30 @@ This mapper does the following:
     6. Outputs lines with single genres.
 """
 
-# Read included years.
+#!/usr/bin/env python
+import sys
+
+# Read included years
 with open('years.txt', 'r') as f:
-    included_years = f.read().split()
-    # Print debug/info message to stderr
+    included_years = set(f.read().split())  # Use set for faster lookup
     print('included_years = %s' % included_years, file=sys.stderr)
 
-# Read included genres.
+# Read included genres
 with open('genres.txt', 'r') as f:
-    included_genres = f.read().split()
-    # Print debug/info message to stderr
+    included_genres = set(f.read().split())  # Use set for faster lookup
     print('included_genres = %s' % included_genres, file=sys.stderr)
 
-
-# Process the input line by line.
 for line in sys.stdin:
+    try:
+        uid, title, genres, year, rating = line.strip().split('\t')
+        genres = genres.split('|')
 
-    # Parse the input line.
-    uid, title, genres, year, rating = line.strip().split('\t')
-
-    # Split genres into a list
-    genres = genres.split('|')
-
-    # check if year is included
-    # skip if year is not included
-    if year not in included_years:
-        continue
-
-    # Output lines with single genres
-    for genre in genres:
-        # skip if genre is not included
-        if genre not in included_genres:
+        if year not in included_years:
             continue
-        else:
-            print('%s\t%s\t%s' %
-                  (title, genre, rating))
+
+        for genre in genres:
+            if genre in included_genres:
+                # Use composite key to ensure proper sorting
+                print(f"{title}|{genre}\t{rating}")
+    except Exception as e:
+        print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
