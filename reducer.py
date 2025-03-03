@@ -35,32 +35,36 @@ rating_sum = 0
 current_genre = None
 current_title = None
 
-# Process the input line by line.
+rating_count = 0
+rating_sum = 0
+current_key = None
+min_votes = 15
+
 for line in sys.stdin:
+    try:
+        # Split composite key and rating
+        key, rating = line.strip().split('\t')
+        title, genre = key.split('|')
+        rating = Decimal(rating)
 
-    title, genre, rating = line.strip().split('\t')
+        if current_key != key:
+            if current_key is not None and rating_count >= min_votes:
+                avg_rating = rating_sum / rating_count
+                prev_title, prev_genre = current_key.split('|')
+                print(f"{prev_title}\t{prev_genre}\t{avg_rating}")
 
-    """
-    Movies have one year but they can have multiple genres.
-    We accumulate the ratings of each title for each genre
-    """
+            rating_count = 1
+            rating_sum = rating
+            current_key = key
+        else:
+            rating_count += 1
+            rating_sum += rating
 
-    # check if the title and genre are already saved
-    # if they are not, save the new ones
-    # if they are, increment the count and rating
+    except Exception as e:
+        print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
 
-    if current_title != title or current_genre != genre:
-        if rating_count >= min_votes:  # work with titles that have enough votes
-            # print the title, genre, and average rating
-            print(current_title, current_genre, rating_sum / rating_count)
-
-        rating_count = 1
-        rating_sum = Decimal(rating)
-        current_title = title
-        current_genre = genre
-    else:
-        rating_count += 1
-        rating_sum += Decimal(rating)
-
-if rating_count >= min_votes:
-    print(current_title, current_genre, rating_sum / rating_count)
+# Output final group
+if current_key is not None and rating_count >= min_votes:
+    avg_rating = rating_sum / rating_count
+    title, genre = current_key.split('|')
+    print(f"{title}\t{genre}\t{avg_rating}")
