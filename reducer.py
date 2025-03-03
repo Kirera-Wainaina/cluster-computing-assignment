@@ -61,3 +61,6 @@ for line in sys.stdin:
     else:
         rating_count += 1
         rating_sum += Decimal(rating)
+
+if rating_count >= min_votes:
+    print(current_title, current_genre, rating_sum / rating_count)
