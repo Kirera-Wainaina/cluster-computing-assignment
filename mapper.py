@@ -19,9 +19,6 @@ This mapper does the following:
     6. Outputs lines with single genres.
 """
 
-#!/usr/bin/env python
-import sys
-
 # Read included years
 with open('years.txt', 'r') as f:
     included_years = set(f.read().split())  # Use set for faster lookup
