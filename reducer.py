@@ -29,33 +29,64 @@ print('min_votes = %s' % min_votes, file=sys.stderr)
 #     * code that finds the highest(s).
 #   ...these are just suggestions/hints.
 
-current_key = None
-total_sum = Decimal('0')
-total_count = 0
+current_genre = None
+genre_movies = {}  # {title: (rating_sum, rating_count)}
 min_votes = 15
 
 for line in sys.stdin:
     try:
         key, rating_sum_str, rating_count_str = line.strip().split('\t')
+        genre, title = key.split('|')
         rating_sum_input = Decimal(rating_sum_str)
         rating_count_input = int(rating_count_str)
 
-        if current_key != key:
-            if current_key is not None and total_count >= min_votes:
-                avg_rating = total_sum / total_count
-                title, genre = current_key.split('|')
-                print(f"{title}\t{genre}\t{avg_rating}")
-            current_key = key
-            total_sum = rating_sum_input
-            total_count = rating_count_input
+        # If genre changes, process the previous genre
+        if current_genre != genre and current_genre is not None:
+            # Calculate averages and find max
+            max_avg = Decimal('-infinity')
+            movies_by_avg = {}  # {avg: [list of titles]}
+
+            for title, (rating_sum, rating_count) in genre_movies.items():
+                if rating_count >= min_votes:
+                    avg = rating_sum / rating_count
+                    if avg not in movies_by_avg:
+                        movies_by_avg[avg] = []
+                    movies_by_avg[avg].append(title)
+                    max_avg = max(max_avg, avg)
+
+            # Output all movies with the max average
+            if max_avg != Decimal('-infinity'):
+                for title in movies_by_avg.get(max_avg, []):
+                    print(f"{current_genre}\t{title}\t{max_avg}")
+
+            # Reset for new genre
+            genre_movies = {}
+
+        # Update current genre and accumulate data
+        current_genre = genre
+        if title in genre_movies:
+            prev_sum, prev_count = genre_movies[title]
+            genre_movies[title] = (
+                prev_sum + rating_sum_input, prev_count + rating_count_input)
         else:
-            total_sum += rating_sum_input
-            total_count += rating_count_input
+            genre_movies[title] = (rating_sum_input, rating_count_input)
 
     except Exception as e:
         print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
 
-if current_key is not None and total_count >= min_votes:
-    avg_rating = total_sum / total_count
-    title, genre = current_key.split('|')
-    print(f"{title}\t{genre}\t{avg_rating}")
+# Process the final genre
+if current_genre is not None:
+    max_avg = Decimal('-infinity')
+    movies_by_avg = {}
+
+    for title, (rating_sum, rating_count) in genre_movies.items():
+        if rating_count >= min_votes:
+            avg = rating_sum / rating_count
+            if avg not in movies_by_avg:
+                movies_by_avg[avg] = []
+            movies_by_avg[avg].append(title)
+            max_avg = max(max_avg, avg)
+
+    if max_avg != Decimal('-infinity'):
+        for title in movies_by_avg.get(max_avg, []):
+            print(f"{current_genre}\t{title}\t{max_avg}")
