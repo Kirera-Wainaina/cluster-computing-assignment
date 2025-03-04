@@ -44,6 +44,7 @@ aggregated = (ratings
     .reduceByKey(lambda sum_and_count, sum_and_count2: (sum_and_count[0] + sum_and_count2[0], sum_and_count[1] + sum_and_count2[1])))  # Sum ratings and counts
 
 # Filter by min_votes and compute averages
+# Returns a list of (genre, (title, avg)) pairs
 min_votes = 15
 averages = (aggregated
     .filter(lambda key_agg: key_agg[1][1] >= min_votes)  # Keep if rating_count >= 15
@@ -61,7 +62,7 @@ def find_max_per_genre(genre_group):
     return [f"{genre}\t{title}\t{max_avg:.4f}" for title in max_titles]
 
 results = (averages
-    .groupByKey()  # Group by genre
+    .groupByKey()  # Group by genre. Returns (genre, [(title, avg)])
     .flatMap(find_max_per_genre)  # Find max-rated movies per genre
     .collect())
 
