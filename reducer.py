@@ -46,7 +46,7 @@ def process_genre(genre, movies, min_votes):
     # Output all movies with the max average
     if max_avg != Decimal('-infinity'):
         for title in max_titles:
-            print(f"{genre}\t{title}\t{max_avg}")
+            print(f"{genre}\t{title}\t{max_avg:.4f}")
 
 
 # Main reducer logic
