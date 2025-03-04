@@ -20,7 +20,7 @@ with open('genres.txt', 'r') as f:
     print(f"included_genres = {included_genres}", file=sys.stderr)
 
 # Load ratings data
-lines = sc.textFile('r5.txt')
+lines = sc.textFile('ratings.txt')
 
 # Parse and explode genres, filter years/genres
 def parse_line(line):
