@@ -22,12 +22,12 @@ This mapper does the following:
 # Read included years
 with open('years.txt', 'r') as f:
     included_years = set(f.read().split())
-    print('included_years = %s' % included_years, file=sys.stderr)
+    # print('included_years = %s' % included_years, file=sys.stderr)
 
 # Read included genres
 with open('genres.txt', 'r') as f:
     included_genres = set(f.read().split())
-    print('included_genres = %s' % included_genres, file=sys.stderr)
+    # print('included_genres = %s' % included_genres, file=sys.stderr)
 
 for line in sys.stdin:
     try:
