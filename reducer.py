@@ -29,6 +29,27 @@ print('min_votes = %s' % min_votes, file=sys.stderr)
 #     * code that finds the highest(s).
 #   ...these are just suggestions/hints.
 
+def process_genre(genre, movies, min_votes):
+    """Process a genre's movies and output titles with the highest average rating."""
+    max_avg = Decimal('-infinity')
+    max_titles = []
+
+    for title, (rating_sum, rating_count) in movies.items():
+        if rating_count >= min_votes:
+            avg = rating_sum / rating_count
+            if avg > max_avg:
+                max_avg = avg
+                max_titles = [title]
+            elif avg == max_avg:
+                max_titles.append(title)
+
+    # Output all movies with the max average
+    if max_avg != Decimal('-infinity'):
+        for title in max_titles:
+            print(f"{genre}\t{title}\t{max_avg}")
+
+
+# Main reducer logic
 current_genre = None
 genre_movies = {}  # {title: (rating_sum, rating_count)}
 min_votes = 15
@@ -42,25 +63,7 @@ for line in sys.stdin:
 
         # If genre changes, process the previous genre
         if current_genre != genre and current_genre is not None:
-            # Find max average and associated titles
-            max_avg = Decimal('-infinity')
-            max_titles = []
-
-            for title, (rating_sum, rating_count) in genre_movies.items():
-                if rating_count >= min_votes:
-                    avg = rating_sum / rating_count
-                    if avg > max_avg:
-                        max_avg = avg
-                        max_titles = [title]
-                    elif avg == max_avg:
-                        max_titles.append(title)
-
-            # Output all movies with the max average
-            if max_avg != Decimal('-infinity'):
-                for title in max_titles:
-                    print(f"{current_genre}\t{title}\t{max_avg}")
-
-            # Reset for new genre
+            process_genre(current_genre, genre_movies, min_votes)
             genre_movies = {}
 
         # Update current genre and accumulate data
@@ -77,18 +80,4 @@ for line in sys.stdin:
 
 # Process the final genre
 if current_genre is not None:
-    max_avg = Decimal('-infinity')
-    max_titles = []
-
-    for title, (rating_sum, rating_count) in genre_movies.items():
-        if rating_count >= min_votes:
-            avg = rating_sum / rating_count
-            if avg > max_avg:
-                max_avg = avg
-                max_titles = [title]
-            elif avg == max_avg:
-                max_titles.append(title)
-
-    if max_avg != Decimal('-infinity'):
-        for title in max_titles:
-            print(f"{current_genre}\t{title}\t{max_avg}")
+    process_genre(current_genre, genre_movies, min_votes)
