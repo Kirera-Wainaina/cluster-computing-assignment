@@ -21,12 +21,12 @@ This mapper does the following:
 
 # Read included years
 with open('years.txt', 'r') as f:
-    included_years = set(f.read().split())  # Use set for faster lookup
+    included_years = set(f.read().split())
     print('included_years = %s' % included_years, file=sys.stderr)
 
 # Read included genres
 with open('genres.txt', 'r') as f:
-    included_genres = set(f.read().split())  # Use set for faster lookup
+    included_genres = set(f.read().split())
     print('included_genres = %s' % included_genres, file=sys.stderr)
 
 for line in sys.stdin:
@@ -39,7 +39,7 @@ for line in sys.stdin:
 
         for genre in genres:
             if genre in included_genres:
-                # Use composite key to ensure proper sorting
-                print(f"{title}|{genre}\t{rating}")
+                # Output: key\t rating_sum \t rating_count (count is 1 for mapper)
+                print(f"{title}|{genre}\t{rating}\t1")
     except Exception as e:
         print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
