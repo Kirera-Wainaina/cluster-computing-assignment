@@ -42,21 +42,22 @@ for line in sys.stdin:
 
         # If genre changes, process the previous genre
         if current_genre != genre and current_genre is not None:
-            # Calculate averages and find max
+            # Find max average and associated titles
             max_avg = Decimal('-infinity')
-            movies_by_avg = {}  # {avg: [list of titles]}
+            max_titles = []
 
             for title, (rating_sum, rating_count) in genre_movies.items():
                 if rating_count >= min_votes:
                     avg = rating_sum / rating_count
-                    if avg not in movies_by_avg:
-                        movies_by_avg[avg] = []
-                    movies_by_avg[avg].append(title)
-                    max_avg = max(max_avg, avg)
+                    if avg > max_avg:
+                        max_avg = avg
+                        max_titles = [title]
+                    elif avg == max_avg:
+                        max_titles.append(title)
 
             # Output all movies with the max average
             if max_avg != Decimal('-infinity'):
-                for title in movies_by_avg.get(max_avg, []):
+                for title in max_titles:
                     print(f"{current_genre}\t{title}\t{max_avg}")
 
             # Reset for new genre
@@ -77,16 +78,17 @@ for line in sys.stdin:
 # Process the final genre
 if current_genre is not None:
     max_avg = Decimal('-infinity')
-    movies_by_avg = {}
+    max_titles = []
 
     for title, (rating_sum, rating_count) in genre_movies.items():
         if rating_count >= min_votes:
             avg = rating_sum / rating_count
-            if avg not in movies_by_avg:
-                movies_by_avg[avg] = []
-            movies_by_avg[avg].append(title)
-            max_avg = max(max_avg, avg)
+            if avg > max_avg:
+                max_avg = avg
+                max_titles = [title]
+            elif avg == max_avg:
+                max_titles.append(title)
 
     if max_avg != Decimal('-infinity'):
-        for title in movies_by_avg.get(max_avg, []):
+        for title in max_titles:
             print(f"{current_genre}\t{title}\t{max_avg}")
