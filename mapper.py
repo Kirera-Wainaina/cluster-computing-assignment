@@ -34,15 +34,13 @@ for line in sys.stdin:
         uid, title, genres, year, rating = line.strip().split('\t')
         genres = genres.split('|')
 
-        # Only filter by year if included_years is non-empty
         if included_years and year not in included_years:
             continue
 
         for genre in genres:
-            # Only filter by genre if included_genres is non-empty
             if included_genres and genre not in included_genres:
                 continue
-            # Output: genre|title\t rating_sum \t rating_count (count is 1 for mapper)
-            print(f"{genre}|{title}\t{rating}\t1")
+            # Output: genre\t title\t rating_sum\t rating_count
+            print(f"{genre}\t{title}\t{rating}\t1")
     except Exception as e:
         print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)

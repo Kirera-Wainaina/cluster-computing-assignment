@@ -30,7 +30,6 @@ print('min_votes = %s' % min_votes, file=sys.stderr)
 #   ...these are just suggestions/hints.
 
 def process_genre(genre, movies, min_votes):
-    """Process a genre's movies and output titles with the highest average rating."""
     max_avg = Decimal('-infinity')
     max_titles = []
 
@@ -43,30 +42,25 @@ def process_genre(genre, movies, min_votes):
             elif avg == max_avg:
                 max_titles.append(title)
 
-    # Output all movies with the max average
     if max_avg != Decimal('-infinity'):
         for title in max_titles:
             print(f"{genre}\t{title}\t{max_avg:.4f}")
 
 
-# Main reducer logic
 current_genre = None
-genre_movies = {}  # {title: (rating_sum, rating_count)}
+genre_movies = {}
 min_votes = 15
 
 for line in sys.stdin:
     try:
-        key, rating_sum_str, rating_count_str = line.strip().split('\t')
-        genre, title = key.split('|')
+        genre, title, rating_sum_str, rating_count_str = line.strip().split('\t')
         rating_sum_input = Decimal(rating_sum_str)
         rating_count_input = int(rating_count_str)
 
-        # If genre changes, process the previous genre
         if current_genre != genre and current_genre is not None:
             process_genre(current_genre, genre_movies, min_votes)
             genre_movies = {}
 
-        # Update current genre and accumulate data
         current_genre = genre
         if title in genre_movies:
             prev_sum, prev_count = genre_movies[title]
@@ -78,6 +72,5 @@ for line in sys.stdin:
     except Exception as e:
         print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
 
-# Process the final genre
 if current_genre is not None:
     process_genre(current_genre, genre_movies, min_votes)
