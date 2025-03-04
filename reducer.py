@@ -36,33 +36,25 @@ min_votes = 15
 
 for line in sys.stdin:
     try:
-        # Split input: key (title|genre) and sum/count from combiner
-        fields = line.strip().split('\t')
-        if len(fields) != 3:
-            print(f"Invalid line: {line.strip()}", file=sys.stderr)
-            continue
-
-        key, rating_sum, rating_count = fields
-        rating_sum = Decimal(rating_sum)
-        rating_count = int(rating_count)
+        key, rating_sum_str, rating_count_str = line.strip().split('\t')
+        rating_sum_input = Decimal(rating_sum_str)
+        rating_count_input = int(rating_count_str)
 
         if current_key != key:
             if current_key is not None and total_count >= min_votes:
                 avg_rating = total_sum / total_count
                 title, genre = current_key.split('|')
                 print(f"{title}\t{genre}\t{avg_rating}")
-
             current_key = key
-            total_sum = rating_sum
-            total_count = rating_count
+            total_sum = rating_sum_input
+            total_count = rating_count_input
         else:
-            total_sum += rating_sum
-            total_count += rating_count
+            total_sum += rating_sum_input
+            total_count += rating_count_input
 
     except Exception as e:
         print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
 
-# Output final group
 if current_key is not None and total_count >= min_votes:
     avg_rating = total_sum / total_count
     title, genre = current_key.split('|')
