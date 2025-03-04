@@ -29,42 +29,41 @@ print('min_votes = %s' % min_votes, file=sys.stderr)
 #     * code that finds the highest(s).
 #   ...these are just suggestions/hints.
 
-
-rating_count = 0
-rating_sum = 0
-current_genre = None
-current_title = None
-
-rating_count = 0
-rating_sum = 0
 current_key = None
+total_sum = Decimal('0')
+total_count = 0
 min_votes = 15
 
 for line in sys.stdin:
     try:
-        # Split composite key and rating
-        key, rating = line.strip().split('\t')
-        title, genre = key.split('|')
-        rating = Decimal(rating)
+        # Split input: key (title|genre) and sum/count from combiner
+        fields = line.strip().split('\t')
+        if len(fields) != 3:
+            print(f"Invalid line: {line.strip()}", file=sys.stderr)
+            continue
+
+        key, rating_sum, rating_count = fields
+        rating_sum = Decimal(rating_sum)
+        rating_count = int(rating_count)
 
         if current_key != key:
-            if current_key is not None and rating_count >= min_votes:
-                avg_rating = rating_sum / rating_count
-                prev_title, prev_genre = current_key.split('|')
-                print(f"{prev_title}\t{prev_genre}\t{avg_rating}")
+            if current_key is not None and total_count >= min_votes:
+                avg_rating = total_sum / total_count
+                title, genre = current_key.split('|')
+                print(f"{title}\t{genre}\t{avg_rating}")
 
-            rating_count = 1
-            rating_sum = rating
             current_key = key
+            total_sum = rating_sum
+            total_count = rating_count
         else:
-            rating_count += 1
-            rating_sum += rating
+            total_sum += rating_sum
+            total_count += rating_count
 
     except Exception as e:
         print(f"Error in line: {line.strip()} - {str(e)}", file=sys.stderr)
 
 # Output final group
-if current_key is not None and rating_count >= min_votes:
-    avg_rating = rating_sum / rating_count
+if current_key is not None and total_count >= min_votes:
+    avg_rating = total_sum / total_count
     title, genre = current_key.split('|')
     print(f"{title}\t{genre}\t{avg_rating}")
