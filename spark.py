@@ -41,7 +41,7 @@ ratings = lines.flatMap(parse_line)
 # Map to ((genre, title), (rating_sum, rating_count))
 aggregated = (ratings
     .map(lambda record: ((record[0], record[1]), (record[2], 1)))  # (genre, title), (rating, 1)
-    .reduceByKey(lambda agg1, agg2: (agg1[0] + agg2[0], agg1[1] + agg2[1])))  # Sum ratings and counts
+    .reduceByKey(lambda sum_and_count, sum_and_count2: (sum_and_count[0] + sum_and_count2[0], sum_and_count[1] + sum_and_count2[1])))  # Sum ratings and counts
 
 # Filter by min_votes and compute averages
 min_votes = 15
